@@ -4,6 +4,7 @@ export interface UserState {
   loading: boolean;
   error: null | string;
   isAuth: boolean;
+  selectedUser: any;
   allUsers: [];
 }
 
@@ -18,6 +19,12 @@ export enum UserActionTypes {
   LOGOUT_USER = "LOGOUT_USER",
   ALL_USERS_LOADED = "ALL_USERS_LOADED",
   REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS",
+  SELECTED_USER = "SELECTED_USER",
+}
+
+interface SelectUserAction {
+  type: UserActionTypes.SELECTED_USER;
+  payload: any;
 }
 
 interface FinishedRequestAction {
@@ -69,6 +76,7 @@ interface AllUsersLoadedAction {
 }
 
 export type UserActions =
+  | SelectUserAction
   | FinishedRequestAction
   | RegisterUserSuccessAction
   | LOGOUT_USER

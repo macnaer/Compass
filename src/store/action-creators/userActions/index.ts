@@ -7,15 +7,16 @@ import {
   removeTokens,
   getAllUsers,
   register,
+  setAccessToken,
+  setRefreshToken,
   logout,
   changePassword,
   updateProfile,
+  setSelectedUser,
+  removeSelectedUser,
+  updateUser,
 } from "../../../services/api-user-service";
 import jwtDecode from "jwt-decode";
-import {
-  setAccessToken,
-  setRefreshToken,
-} from "../../../services/api-user-service";
 import { CurrentPaginations } from "../../../pages/users/allUsers";
 
 export const LoginUser = (user: any) => {
@@ -103,26 +104,12 @@ export const LogOut = (id: string) => {
     const { response } = data;
     if (response.isSuccess) {
       removeTokens();
+      removeSelectedUser();
       dispatch({
         type: UserActionTypes.LOGOUT_USER,
       });
     }
   };
-};
-
-export const AuthUser = (
-  token: string,
-  message: string,
-  dispatch: Dispatch<UserActions>
-) => {
-  const decodedToken = jwtDecode(token) as any;
-  dispatch({
-    type: UserActionTypes.LOGIN_USER_SUCCESS,
-    payload: {
-      message,
-      decodedToken,
-    },
-  });
 };
 
 export const GetAllUsers = (paginations: CurrentPaginations) => {
@@ -176,6 +163,13 @@ export const ChangePassword = (user: any) => {
   };
 };
 
+export const SelectdUser = (user: any) => {
+  return async (dispatch: Dispatch<UserActions>) => {
+    dispatch({ type: UserActionTypes.SELECTED_USER, payload: user });
+    setSelectedUser(user);
+  };
+};
+
 export const UpdateProfile = (user: any) => {
   return async (dispatch: Dispatch<UserActions>) => {
     try {
@@ -203,4 +197,56 @@ export const UpdateProfile = (user: any) => {
       });
     }
   };
+};
+
+export const UpdateUser = (user: any) => {
+  return async (dispatch: Dispatch<UserActions>) => {
+    try {
+      dispatch({ type: UserActionTypes.START_REQUEST });
+      const data = await updateUser(user);
+      const { response } = data;
+      console.log("response ", response);
+      // if (!response.isSuccess) {
+      //   dispatch({
+      //     type: UserActionTypes.FINISHED_REQUEST,
+      //     payload: response.message,
+      //   });
+      //   toast.error(response.message);
+      // } else {
+      //   const { accessToken, refreshToken, message } = data.response;
+      //   removeTokens();
+      //   setAccessToken(accessToken);
+      //   setRefreshToken(refreshToken);
+      //   AuthUser(accessToken, message, dispatch);
+      //   toast.success(response.message);
+      //}
+    } catch (e) {
+      dispatch({
+        type: UserActionTypes.SERVER_USER_ERROR,
+        payload: "Unknown error",
+      });
+    }
+  };
+};
+
+export const SelectUser = (
+  selectedUser: any,
+  dispatch: Dispatch<UserActions>
+) => {
+  dispatch({ type: UserActionTypes.SELECTED_USER, payload: selectedUser });
+};
+
+export const AuthUser = (
+  token: string,
+  message: string,
+  dispatch: Dispatch<UserActions>
+) => {
+  const decodedToken = jwtDecode(token) as any;
+  dispatch({
+    type: UserActionTypes.LOGIN_USER_SUCCESS,
+    payload: {
+      message,
+      decodedToken,
+    },
+  });
 };

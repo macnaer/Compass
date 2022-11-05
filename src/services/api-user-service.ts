@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://localhost:5001/api/User",
+  //baseURL: "https://localhost:5001/api/User",
+  baseURL: "http://10.7.101.243/api/User",
   headers: {
     "Content-Type": "application/json",
   },
@@ -99,10 +100,24 @@ const User = {
   logout: (userId: string) => requests.get("/logout?userId=" + userId),
   changePassword: (user: any) => requests.post(`/ChangePassword`, user),
   updateProfile: (user: any) => requests.post(`/UpdateProfile`, user),
+  updateUser: (user: any) => requests.post(`/UpdateUser`, user),
 };
 
 export async function updateProfile(user: any) {
   const data = await User.updateProfile(user)
+    .then((response) => {
+      return {
+        response,
+      };
+    })
+    .catch((error) => {
+      return error.response;
+    });
+  return data;
+}
+
+export async function updateUser(user: any) {
+  const data = await User.updateUser(user)
     .then((response) => {
       return {
         response,
@@ -197,6 +212,21 @@ export async function getAllUsers(
 }
 export function setAccessToken(token: string) {
   window.localStorage.setItem("accessToken", token);
+}
+
+export function setSelectedUser(user: any) {
+  user = JSON.stringify(user);
+  window.localStorage.setItem("selectedUser", user);
+}
+
+export function getSelectedUser() {
+  let selectedUser: any = window.localStorage.getItem("selectedUser");
+  selectedUser = JSON.parse(selectedUser);
+  return selectedUser;
+}
+
+export function removeSelectedUser() {
+  window.localStorage.removeItem("selectedUser");
 }
 
 export function setRefreshToken(token: string) {

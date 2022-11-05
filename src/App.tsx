@@ -13,8 +13,9 @@ import DefaultPage from "./pages/defaultPage";
 import Users from "./pages/users/allUsers";
 import Register from "./pages/auth/register";
 import Profile from "./pages/auth/profile";
+import UserDetails from "./pages/users/userDetails";
 
-const App: React.FC = () => {
+function App() {
   const { isAuth, user } = useTypedSelector((store) => store.UserReducer);
 
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
               <Route path="users" element={<Users />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="userDetails" element={<UserDetails />} />
             </Route>
           )}
           {user.role === "Users" && (
@@ -44,6 +46,6 @@ const App: React.FC = () => {
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
-};
+}
 
 export default App;

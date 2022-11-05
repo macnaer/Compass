@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridApi, GridCellValue, GridColDef } from "@mui/x-data-grid";
 import Loader from "../../../components/loader";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Grid, TablePagination } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -22,15 +22,6 @@ export class CurrentPaginations {
   }
 }
 
-const columns: GridColDef[] = [
-  { field: "surname", headerName: "Surname", width: 230 },
-  { field: "name", headerName: "Name", width: 170 },
-  { field: "email", headerName: "Email", width: 230 },
-  { field: "phoneNumber", headerName: "Phone", width: 230 },
-  { field: "emailConfirmed", headerName: "Confirmed email", width: 130 },
-  { field: "role", headerName: "Role", width: 130 },
-];
-
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   textAlign: "right",
@@ -39,16 +30,51 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Users: React.FC<any> = () => {
-  const { GetAllUsers } = useActions();
+  const { GetAllUsers, SelectdUser } = useActions();
   const { loading, allUsers } = useTypedSelector((state) => state.UserReducer);
 
   let rows: any[] = allUsers;
   const [page, setPage] = useState(0);
   const [rowsPerPage, SetRowsPerPage] = useState(10);
+  const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
     GetAllUsers(getCurrentPaginations(page, rowsPerPage));
   }, []);
+
+  const columns: GridColDef[] = [
+    { field: "surname", headerName: "Surname", width: 230 },
+    { field: "name", headerName: "Name", width: 170 },
+    { field: "email", headerName: "Email", width: 230 },
+    { field: "phoneNumber", headerName: "Phone", width: 230 },
+    { field: "emailConfirmed", headerName: "Confirmed email", width: 130 },
+    { field: "role", headerName: "Role", width: 130 },
+    {
+      field: "id",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => {
+        const onClick = (e: any) => {
+          e.stopPropagation(); // don't select this row after clicking
+
+          const api: GridApi = params.api;
+          const thisRow: Record<string, GridCellValue> = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+          const userData = thisRow;
+          SelectdUser(userData);
+          setIsRedirect(true);
+        };
+
+        return <Button onClick={onClick}>Edit</Button>;
+      },
+    },
+  ];
 
   function getCurrentPaginations(
     currentPage: number,
@@ -85,6 +111,10 @@ const Users: React.FC<any> = () => {
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (isRedirect) {
+    return <Navigate to="/dashboard/userDetails" />;
   }
 
   return (

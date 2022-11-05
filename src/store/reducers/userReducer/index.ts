@@ -6,6 +6,7 @@ const initialState: UserState = {
   loading: false,
   error: null,
   isAuth: false,
+  selectedUser: null,
   allUsers: [],
 };
 
@@ -32,8 +33,11 @@ const UserReducer = (state = initialState, action: UserActions): UserState => {
         user: null,
         message: null,
         error: null,
+        selectedUser: null,
         allUsers: [],
       };
+    case UserActionTypes.SELECTED_USER:
+      return { ...state, loading: false, selectedUser: action.payload };
     case UserActionTypes.FORGOT_USER_PASSWORD_SUCCESS:
       return { ...state, loading: false, message: action.payload.message };
     case UserActionTypes.FORGOT_USER_PASSWORD_ERROR:
