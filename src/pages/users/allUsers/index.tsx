@@ -9,6 +9,7 @@ import { Link, Navigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Grid, TablePagination } from "@mui/material";
 import Paper from "@mui/material/Paper";
+import moment from "moment";
 
 export class CurrentPaginations {
   public start: number;
@@ -43,11 +44,16 @@ const Users: React.FC<any> = () => {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: "surname", headerName: "Surname", width: 230 },
+    { field: "surname", headerName: "Surname", width: 180 },
     { field: "name", headerName: "Name", width: 170 },
-    { field: "email", headerName: "Email", width: 230 },
-    { field: "phoneNumber", headerName: "Phone", width: 230 },
+    { field: "email", headerName: "Email", width: 200 },
+    { field: "phoneNumber", headerName: "Phone", width: 150 },
     { field: "emailConfirmed", headerName: "Confirmed email", width: 130 },
+    {
+      field: "lockoutEnd",
+      headerName: "Lockout End",
+      width: 250,
+    },
     { field: "role", headerName: "Role", width: 130 },
     {
       field: "id",

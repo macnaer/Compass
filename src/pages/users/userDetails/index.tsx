@@ -9,7 +9,9 @@ import {
   MenuItem,
   Select,
   TextField,
+  Switch,
 } from "@mui/material";
+
 import { Box } from "@mui/system";
 import { Field, Formik } from "formik";
 import React from "react";
@@ -29,13 +31,17 @@ const UserDetails: React.FC = () => {
   const { selectedUser } = useTypedSelector((store) => store.UserReducer);
   const { UpdateUser } = useActions();
 
-  console.log(selectedUser);
+  const [block, setBlock] = React.useState(true);
+
   initialProfileValues.name = selectedUser.name;
   initialProfileValues.surname = selectedUser.surname;
   initialProfileValues.email = selectedUser.email;
   initialProfileValues.phone = selectedUser.phoneNumber;
   initialProfileValues.role = selectedUser.role;
 
+  const handleBlock = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBlock(event.target.checked);
+  };
   const changeProfile = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -65,7 +71,7 @@ const UserDetails: React.FC = () => {
         onSubmit={() => {}}
       >
         {({ errors, touched, isValid }) => (
-          <Card>
+          <Card sx={{ mb: 3 }}>
             <Box
               onSubmit={changeProfile}
               component="form"
@@ -160,6 +166,41 @@ const UserDetails: React.FC = () => {
           </Card>
         )}
       </Formik>
+      <Card>
+        <Box style={{ width: "100%" }} sx={{ mt: 1 }}>
+          <CardHeader
+            style={{ color: "red" }}
+            subheader={"Block or delete user"}
+            title="Danger zone"
+          ></CardHeader>
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item md={6} xs={12}>
+                <Box display="flex" justifyContent="flex-end">
+                  {" "}
+                  <span
+                    style={{
+                      justifyContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Block/unblcok user
+                  </span>
+                  <Switch
+                    checked={block}
+                    onChange={handleBlock}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Box>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                Delete user
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Box>
+      </Card>
     </>
   );
 };

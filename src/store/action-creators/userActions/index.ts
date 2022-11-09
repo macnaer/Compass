@@ -121,7 +121,6 @@ export const GetAllUsers = (paginations: CurrentPaginations) => {
         paginations.end,
         paginations.isAll
       );
-
       dispatch({
         type: UserActionTypes.ALL_USERS_LOADED,
         payload: { message: response.message, allUsers: response.payload },
@@ -205,21 +204,15 @@ export const UpdateUser = (user: any) => {
       dispatch({ type: UserActionTypes.START_REQUEST });
       const data = await updateUser(user);
       const { response } = data;
-      console.log("response ", response);
-      // if (!response.isSuccess) {
-      //   dispatch({
-      //     type: UserActionTypes.FINISHED_REQUEST,
-      //     payload: response.message,
-      //   });
-      //   toast.error(response.message);
-      // } else {
-      //   const { accessToken, refreshToken, message } = data.response;
-      //   removeTokens();
-      //   setAccessToken(accessToken);
-      //   setRefreshToken(refreshToken);
-      //   AuthUser(accessToken, message, dispatch);
-      //   toast.success(response.message);
-      //}
+      if (!response.isSuccess) {
+        dispatch({
+          type: UserActionTypes.FINISHED_REQUEST,
+          payload: response.message,
+        });
+        toast.error(response.message);
+      } else {
+        toast.success(response.message);
+      }
     } catch (e) {
       dispatch({
         type: UserActionTypes.SERVER_USER_ERROR,
