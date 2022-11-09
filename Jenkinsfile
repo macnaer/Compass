@@ -12,14 +12,7 @@ pipeline  {
         timestamps()
     }
     stages {
-        stage("Removing old images") {
-            steps {
-                echo 'Removing images ...'
-                dir('/home/master/frontend'){
-                    sh "docker rmi macnaer/compass_frontend"
-                }
-            }
-        }
+ 
         stage("Creating images") {
             steps {
                 echo 'Creating docker image ...'
