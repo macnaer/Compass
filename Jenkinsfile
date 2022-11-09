@@ -16,7 +16,7 @@ pipeline  {
             steps {
                 echo 'Removing images ...'
                 dir('/home/master/frontend'){
-                    sh "docker rmi macnaer/compass_frontend -f"
+                    sh "docker rmi macnaer/compass_frontend"
                 }
             }
         }
