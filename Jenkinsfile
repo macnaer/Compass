@@ -15,17 +15,15 @@ pipeline  {
         stage("Removing old images") {
             steps {
                 echo 'Removing images ...'
-                dir('/home/master'){
-                    sh "docker images"
+                dir('/home/master/frontend'){
                     sh "docker rmi macnaer/compass_frontend -f"
-                     sh "docker images"
                 }
             }
         }
         stage("Creating images") {
             steps {
                 echo 'Creating docker image ...'
-                dir('/home/master'){
+                  dir('/home/master/frontend'){
                     sh "docker build -t macnaer/compass_frontend ."
                 }
             }
