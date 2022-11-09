@@ -1,3 +1,5 @@
+#!groovy
+//  groovy Jenkinsfile
 properties([disableConcurrentBuilds()])
 
 pipeline  {
@@ -13,7 +15,7 @@ pipeline  {
         stage("Removing old images") {
             steps {
                 echo 'Removing images ...'
-                dir('/home/master/frontend'){
+                 dir('.'){
                     sh "docker rmi macnaer/compass_frontend"
                 }
             }
@@ -21,7 +23,7 @@ pipeline  {
         stage("Creating images") {
             steps {
                 echo 'Creating docker image ...'
-                  dir('/home/master/frontend'){
+                    dir('.'){
                     sh "docker build -t macnaer/compass_frontend ."
                 }
             }
