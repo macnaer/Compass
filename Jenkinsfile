@@ -16,7 +16,9 @@ pipeline  {
             steps {
                 echo 'Removing images ...'
                  dir('.'){
-                    sh "docker rmi macnaer/compass_frontend"
+                     sh 'docker ps -q --filter "name=compass_frontend" | grep -q . && docker stop macnaer/compass_frontend || echo Not Found'
+                     sh 'docker ps -q --filter "name=compass_frontend" | grep -q . && docker rm macnaer/compass_frontend || echo Not Found'
+                     sh 'docker ps -q --filter "name=compass_frontend" | grep -q . && docker rmi macnaer/compass_frontend || echo Not Found'
                 }
             }
         }
